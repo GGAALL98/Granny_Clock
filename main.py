@@ -18,7 +18,7 @@ alert_sound = os.path.join(script_dir, "alert.wav")
 is_playing = False
 music_process = None
 notified_meds = set()
-current_theme = 'light'  # Default theme
+current_theme = 'dark'  # Default theme
 medication_status = {}  # Track medication completion status
 
 # Load medication reminders from JSON
