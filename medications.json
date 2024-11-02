@@ -1,0 +1,7 @@
+{
+    "medications": [
+        {"name": "Medication 1", "time": "09:00"},
+        {"name": "Medication 2", "time": "15:00"},
+        {"name": "Medication 3", "time": "21:00"}
+    ]
+}
