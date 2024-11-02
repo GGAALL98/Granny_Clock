@@ -10,10 +10,44 @@ STARTUP_SCRIPT="$HOME/start_grandma_clock.sh"
 # Create the installation directory (if it doesn't already exist)
 mkdir -p "$INSTALL_DIR"
 
-# Update the package list and install required packages
-echo "Installing Python and necessary packages..."
-sudo apt update
-sudo apt install -y python3 python3-pyqt6 python3-pyqt6.qtmultimedia python3-pip mpv cage
+# Function to install packages using apt
+install_with_apt() {
+    echo "Using APT to install packages..."
+    sudo apt update
+    sudo apt install -y python3 python3-pyqt6 python3-pyqt6.qtmultimedia python3-pip mpv cage
+}
+
+# Function to install packages using dnf
+install_with_dnf() {
+    echo "Using DNF to install packages..."
+    sudo dnf install -y python3 python3-qt6 python3-qt6-multimedia python3-pip mpv cage
+}
+
+# Function to install packages using pacman
+install_with_pacman() {
+    echo "Using Pacman to install packages..."
+    sudo pacman -S --noconfirm python python-pyqt6
+    pip install PyQt6
+    sudo pacman -S --noconfirm mpv cage
+}
+
+# Function to install packages using pip
+install_with_pip() {
+    echo "Using PIP to install packages..."
+    pip install PyQt6
+}
+
+# Detect the package manager and install the required packages
+if command -v apt &> /dev/null; then
+    install_with_apt
+elif command -v dnf &> /dev/null; then
+    install_with_dnf
+elif command -v pacman &> /dev/null; then
+    install_with_pacman
+else
+    echo "No supported package manager found. Please install Python 3 and PyQt6 manually."
+    install_with_pip
+fi
 
 # Copy application files to the installation directory
 echo "Copying application files..."
