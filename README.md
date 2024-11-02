@@ -16,7 +16,7 @@ To install Grandma Clock on your system, follow these steps. If you prefer, use 
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/GGAALL98/Granny_Clock.git
-   cd your-repo-directory
+   cd Granny_Clock
    ```
 
 2. **Run the Installer**:
