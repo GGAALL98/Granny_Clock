@@ -1,0 +1,32 @@
+{
+    "medications": [
+        {
+            "name": "Painkiller",
+            "time": "08:00",
+            "days": [
+                "Monday",
+                "Wednesday",
+                "Friday"
+            ]
+        },
+        {
+            "name": "Vitamin C",
+            "time": "15:50",
+            "days": [
+                "Monday",
+                "Tuesday",
+                "Thursday",
+                "Saturday"
+            ]
+        },
+        {
+            "name": "Blood Pressure Med",
+            "time": "19:00",
+            "days": [
+                "Monday",
+                "Friday",
+                "Saturday"
+            ]
+        }
+    ]
+}
