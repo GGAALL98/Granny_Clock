@@ -1,0 +1,42 @@
+{
+    "en": {
+        "Music Player": "Music Player",
+        "Play Music": "Play Music",
+        "Stop Music": "Stop Music",
+        "Play Station": "Play Station",
+        "Stop Station": "Stop Station",
+        "Local Music": "Local Music",
+        "Radio Stations": "Radio Stations",
+        "No local music or radio stations available. Please add music files or select radio stations.": "No local music or radio stations available. Please add music files or select radio stations."
+    },
+    "es": {
+        "Music Player": "Reproductor de Música",
+        "Play Music": "Reproducir Música",
+        "Stop Music": "Detener Música",
+        "Play Station": "Reproducir Estación",
+        "Stop Station": "Detener Estación",
+        "Local Music": "Música Local",
+        "Radio Stations": "Estaciones de Radio",
+        "No local music or radio stations available. Please add music files or select radio stations.": "No hay música local o estaciones de radio disponibles. Por favor, agregue archivos de música o seleccione estaciones de radio."
+    },
+    "he": {
+        "Music Player": "נגן מוזיקה",
+        "Play Music": "נגן מוזיקה",
+        "Stop Music": "הפסיק מוזיקה",
+        "Play Station": "נגן תחנה",
+        "Stop Station": "הפסיק תחנה",
+        "Local Music": "מוזיקה מקומית",
+        "Radio Stations": "תחנות רדיו",
+        "No local music or radio stations available. Please add music files or select radio stations.": "אין מוזיקה מקומית או תחנות רדיו זמינות. אנא הוסף קבצי מוזיקה או בחר תחנות רדיו."
+    },
+    "fil": {
+        "Music Player": "Manlalaro ng Musika",
+        "Play Music": "Magpatugtog ng Musika",
+        "Stop Music": "Itigil ang Musika",
+        "Play Station": "Magpatugtog ng Estasyon",
+        "Stop Station": "Itigil ang Estasyon",
+        "Local Music": "Lokal na Musika",
+        "Radio Stations": "Mga Estasyon ng Radyo",
+        "No local music or radio stations available. Please add music files or select radio stations.": "Walang lokal na musika o mga estasyon ng radyo. Mangyaring magdagdag ng mga file ng musika o pumili ng mga estasyon ng radyo."
+    }
+}

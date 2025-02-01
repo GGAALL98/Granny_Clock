@@ -1,0 +1,34 @@
+{
+  "en": {
+    "Clock": "Clock",
+    "News": "News",
+    "Music": "Music",
+    "Editor": "Editor",
+    "Credits": "Credits",
+    "news_placeholder": "News and updates will appear here.\n(Coming soon!)"
+  },
+  "es": {
+    "Clock": "Reloj",
+    "News": "Noticias",
+    "Music": "Música",
+    "Editor": "Editor",
+    "Credits": "Créditos",
+    "news_placeholder": "Las noticias y actualizaciones aparecerán aquí.\n(¡Próximamente!)"
+  },
+  "he": {
+    "Clock": "שעון",
+    "News": "חדשות",
+    "Music": "מוזיקה",
+    "Editor": "עורך",
+    "Credits": "קרדיטים",
+    "news_placeholder": "חדשות ועדכונים יופיעו כאן.\n(בקרוב!)"
+  },
+  "fil": {
+    "Clock": "Orasan",
+    "News": "Balita",
+    "Music": "Musika",
+    "Editor": "Editor",
+    "Credits": "Mga Kredito",
+    "news_placeholder": "Ang mga balita at update ay lilitaw dito.\n(Magiging available sa lalong madaling panahon!)"
+  }
+}
