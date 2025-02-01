@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-    <img src="https://tokei.rs/b1/github/GGAALL98/Camera_OSD" alt="Total Lines">
+    <img src="https://tokei.rs/b1/github/GGAALL98/Granny_Clock" alt="Total Lines">
 </p>
 
 Grandma Clock is a basic clock application designed primarily for 7-inch touch screens. It features a large font for easy readability and serves as a medication reminder and shuffle music player. With Grandma Clock, you can keep track of your medication schedule and enjoy your favorite tunes whenever you want!
