@@ -3,7 +3,7 @@ import os
 import json
 import random
 import subprocess
-import argparse  # For argument parsing
+import argparse
 from PyQt6.QtCore import QTimer, QTime, Qt, QDate
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
@@ -91,7 +91,9 @@ class MedicationReminderApp(QWidget):
     def init_ui(self):
         self.setWindowTitle(self.translate("Medication Reminder"))
         self.setGeometry(100, 100, 480, 800)
-        self.setStyleSheet("background-color: white; color: black;")  # Default Light Theme
+        self.setStyleSheet(
+            "background-color: white; color: black;"
+        )  # Default Light Theme
 
         # Main layout
         layout = QVBoxLayout()
@@ -102,7 +104,9 @@ class MedicationReminderApp(QWidget):
         # Top-left editor button
         self.editor_button = QPushButton(self.translate("Editor"), self)
         self.editor_button.setFont(font)
-        self.editor_button.clicked.connect(self.open_medication_editor)  # Connect to the editor method
+        self.editor_button.clicked.connect(
+            self.open_medication_editor
+        )  # Connect to the editor method
 
         # Top section for Time and Date
         top_layout = QVBoxLayout()
@@ -128,7 +132,9 @@ class MedicationReminderApp(QWidget):
 
         # Add the top-left button layout to the main layout
         top_left_layout = QHBoxLayout()
-        top_left_layout.addWidget(self.editor_button, alignment=Qt.AlignmentFlag.AlignLeft)
+        top_left_layout.addWidget(
+            self.editor_button, alignment=Qt.AlignmentFlag.AlignLeft
+        )
         top_left_layout.addWidget(divider)  # You can add the divider here or separately
 
         # Add the top section and time to the main layout
@@ -153,7 +159,9 @@ class MedicationReminderApp(QWidget):
 
         # Group for Future Medications
         future_group = QGroupBox(self)
-        future_group.setStyleSheet("QGroupBox { margin: 0px; border: none; padding: 0px; }")
+        future_group.setStyleSheet(
+            "QGroupBox { margin: 0px; border: none; padding: 0px; }"
+        )
         future_layout = QVBoxLayout()
         future_title = QLabel(self.translate("Future Medications"), self)
         future_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -164,7 +172,9 @@ class MedicationReminderApp(QWidget):
 
         # Group for Past Medications
         past_group = QGroupBox(self)
-        past_group.setStyleSheet("QGroupBox { margin: 0px; border: none; padding: 0px; }")
+        past_group.setStyleSheet(
+            "QGroupBox { margin: 0px; border: none; padding: 0px; }"
+        )
         past_layout = QVBoxLayout()
         past_title = QLabel(self.translate("Past Medications"), self)
         past_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -203,13 +213,13 @@ class MedicationReminderApp(QWidget):
         layout.addLayout(button_layout)
 
         self.setLayout(layout)
-        
+
     # Load medications from JSON file
     def load_medications(self):
         with open("medications.json", "r") as file:
             data = json.load(file)
         return data["medications"]
-        
+
     def translate(self, text):
         """Translate the text using the selected language."""
         return self.translations.get(self.language, {}).get(text, text)
@@ -284,7 +294,7 @@ class MedicationReminderApp(QWidget):
     def open_medication_editor(self):
         """Open the editor window when the button is clicked."""
         self.medications_editor.exec()  # Show the popup as a modal dialog
-    
+
 
 if __name__ == "__main__":
     # Set up argument parser
