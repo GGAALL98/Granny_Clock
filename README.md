@@ -8,22 +8,18 @@
   <img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue" alt="Python">
 </p>
 
-<p align="center">
-    <img src="https://tokei.rs/b1/github/GGAALL98/Granny_Clock" alt="Total Lines">
-</p>
-
-Grandma Clock is a basic clock application designed primarily for 7-inch touch screens. It features a large font for easy readability and serves as a medication reminder and shuffle music player. With Grandma Clock, you can keep track of your medication schedule and enjoy your favorite tunes whenever you want!
+Grandma Clock is a basic clock application designed primarily for 7-inch touch screens. It features a large font for easy readability and serves as a medication reminder and a simple music player. With Grandma Clock, you can keep track of your medication schedule and enjoy your favorite tunes whenever you want!
 
 ## Features
 - **Clock Functionality**: Displays the current time in a large, easy-to-read format and provides reminders for your medication schedule.
 - **Medication Tracker**: Notifies you when it's time to take your medications, helping you stay on track.
-- **Music Player**: Shuffle and play music from your designated music folder at any time.
+- **Music Player**: Shuffle and play music from your designated music folder at any time or play music from the internet radio.
 
 ## Installation (Cross-Platform)
 
 To install Grandma Clock on your system, follow these steps. If you prefer, use the manual installation method.
 
-### Installer Script
+### Installer Script (BROKEN!!!)
 
 1. **Clone the Repository**:
    ```bash
@@ -37,12 +33,6 @@ To install Grandma Clock on your system, follow these steps. If you prefer, use 
    ./installer.sh          # Run the installer
    ```
    The installer will **automatically detect your package manager** (apt, pacman, dnf) and install all necessary packages, including MPV, copy the application files to `~/grandma_clock`, and create a startup script.
-
-**Application files that will be copied to `~/grandma_clock` include**:
-- `main.py`: The main application script.
-- `medications.json`: The file for managing your medication schedule.
-- `alarm.wav`: The sound file for notifications.
-- Any additional resource files (e.g., images or configurations).
 
 ### Manual Installation Method
 
@@ -73,37 +63,20 @@ If you're using a different operating system, you'll need to manually install th
 
 ## Adding Medications
 
-To set up your medication reminders, you'll need to edit the `medications.json` file located in `~/grandma_clock`. This file allows you to define your medication schedule in a structured format. Here’s how to do it:
-
-1. **Open `medications.json`**: Use a text editor of your choice to edit the file. For example:
-   ```bash
-   nvim ~/grandma_clock/medications.json
-   ```
-
-2. **Edit the JSON Structure**: Replace the contents with your medication schedule. The structure should look like this:
-   ```json
-   {
-       "medications": [
-           {"name": "Medication 1", "time": "09:00"},
-           {"name": "Medication 2", "time": "15:00"},
-           {"name": "Medication 3", "time": "21:00"}
-       ]
-   }
-   ```
-   - Modify the `"name"` and `"time"` fields with your actual medication names and times. You can add or remove medication entries as needed.
+To set up your medication reminders, use the editor tab on the main screeen.
 
 ## Adding Music
 
-To play music with Grandma Clock, you need to have a designated music folder. By default, this folder will be located at `~/grandma_clock/music`. You can add your music files (e.g., MP3, WAV) to this folder. 
+To play music with Grandma Clock, you need to have a designated music folder. By default, this folder will be located at `~/grandma_clock/music/files`. You can add your music files (e.g., MP3, flac, WAV) to this folder. 
 
 1. **Create the Music Directory** (if not created by the installer):
    ```bash
-   mkdir -p ~/grandma_clock/music
+   mkdir -p ~/grandma_clock/music/files
    ```
 
-2. **Add Your Music Files**: Simply copy or move your audio files into the `~/grandma_clock/music` directory. 
+2. **Add Your Music Files**: Simply copy or move your audio files into the `~/grandma_clock/music/files` directory. 
 
-3. **File Formats**: Ensure your music files are in a compatible format, such as MP3 or WAV, so that they can be played using MPV.
+3. **File Formats**: Ensure your music files are in a compatible format, such as MP3, flac or WAV, so that they can be played using MPV.
 
 ## Uninstallation
 
