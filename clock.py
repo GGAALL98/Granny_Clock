@@ -1,17 +1,12 @@
-import sys
 import os
 import json
-import random
 import subprocess
-import argparse
 from PyQt6.QtCore import QTimer, QTime, Qt, QDate
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
-    QApplication,
     QWidget,
     QVBoxLayout,
     QLabel,
-    QPushButton,
     QHBoxLayout,
     QListWidget,
     QFrame,
@@ -19,15 +14,12 @@ from PyQt6.QtWidgets import (
     QGroupBox,
 )
 
-from medication_manager import MedicationManager
-
-# Define the music directory and alert sound path
-MUSIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources/music")
 ALERT_SOUND_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "resources/alert.wav"
 )
+
 TRANSLATIONS_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "resources/translations.json"
+    os.path.dirname(os.path.abspath(__file__)), "resources/translations/clock.json"
 )
 
 # Load translations from JSON file
@@ -46,28 +38,12 @@ def play_alert_sound():
     else:
         print("Alert sound file not found!")
 
-# Play music
-def play_music():
-    music_files = [f for f in os.listdir(MUSIC_DIR) if f.endswith((".mp3", ".wav"))]
-    if music_files:
-        random.shuffle(music_files)  # Shuffle the playlist
-        music_command = ["mpv", "--no-video", "--loop", "--shuffle"] + [
-            os.path.join(MUSIC_DIR, f) for f in music_files
-        ]
-        subprocess.Popen(
-            music_command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-        )
-    else:
-        print("No music files found!")
-
 class MedicationReminderApp(QWidget):
     def __init__(self, language="en"):
         super().__init__()
 
         self.translations = load_translations()  # Load translations
         self.language = language  # Set language from argument
-
-        self.dark_mode = False  # Default to light mode
 
         self.init_ui()
 
@@ -77,31 +53,15 @@ class MedicationReminderApp(QWidget):
         self.timer.start(1000)  # Update every second
         self.update_time()
 
-        # Set up an auto theme switch timer to check the time every minute
-        self.theme_timer = QTimer(self)
-        self.theme_timer.timeout.connect(self.auto_toggle_theme)
-        self.theme_timer.start(60000)  # Check every minute
-
-        self.medications_editor = MedicationManager(self, language)
-
     def init_ui(self):
         self.setWindowTitle(self.translate("Medication Reminder"))
         self.setGeometry(100, 100, 480, 800)
-        self.setStyleSheet("background-color: white; color: black;")  # Default Light Theme
 
         # Main layout
         layout = QVBoxLayout()
 
         font = QFont()
         font.setPointSize(24)
-
-        # Top-left editor button (removed the divider from this layout)
-        top_left_layout = QHBoxLayout()
-        self.editor_button = QPushButton(self.translate("Editor"), self)
-        self.editor_button.setFont(font)
-        self.editor_button.clicked.connect(self.open_medication_editor)
-        top_left_layout.addWidget(self.editor_button, alignment=Qt.AlignmentFlag.AlignLeft)
-        layout.addLayout(top_left_layout)
 
         # Top section for Time and Date
         top_layout = QVBoxLayout()
@@ -172,24 +132,6 @@ class MedicationReminderApp(QWidget):
         self.countdown_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.countdown_label)
 
-        # Divider Line
-        divider3 = QFrame(self)
-        divider3.setFrameShape(QFrame.Shape.HLine)
-        layout.addWidget(divider3)
-
-        # Bottom section for Controls
-        button_layout = QHBoxLayout()
-        self.play_music_button = QPushButton(self.translate("Play Music"), self)
-        self.play_music_button.clicked.connect(play_music)
-        self.play_music_button.setFont(font)
-        self.theme_toggle_button = QPushButton(self.translate("Toggle Dark Mode"), self)
-        self.theme_toggle_button.clicked.connect(self.toggle_theme)
-        self.theme_toggle_button.setFont(font)
-
-        button_layout.addWidget(self.play_music_button)
-        button_layout.addWidget(self.theme_toggle_button)
-        layout.addLayout(button_layout)
-
         self.setLayout(layout)
 
     # Load medications from JSON file
@@ -215,6 +157,9 @@ class MedicationReminderApp(QWidget):
             for med in self.medications
             if any(day.lower() == current_day for day in med["days"])
         ]
+
+        # Sort medications by time
+        today_medications.sort(key=lambda med: QTime.fromString(med["time"], "hh:mm"))
 
         self.med_list_widget_future.clear()
         self.med_list_widget_past.clear()
@@ -250,41 +195,3 @@ class MedicationReminderApp(QWidget):
                 self.countdown_label.setText(
                     f"{self.translate('Next medication in:')} --:--:--"
                 )
-
-    def toggle_theme(self):
-        if self.dark_mode:
-            self.setStyleSheet("background-color: white; color: black;")
-            self.theme_toggle_button.setText(self.translate("Toggle Dark Mode"))
-        else:
-            self.setStyleSheet("background-color: black; color: white;")
-            self.theme_toggle_button.setText(self.translate("Toggle Light Mode"))
-        self.dark_mode = not self.dark_mode
-
-    def auto_toggle_theme(self):
-        current_time = QTime.currentTime()
-        if current_time >= QTime(18, 0) or current_time < QTime(7, 0):
-            if not self.dark_mode:
-                self.toggle_theme()
-        else:
-            if self.dark_mode:
-                self.toggle_theme()
-
-    def open_medication_editor(self):
-        """Open the editor window when the button is clicked."""
-        self.medications_editor.exec()  # Show the popup as a modal dialog
-
-
-if __name__ == "__main__":
-    # Set up argument parser
-    parser = argparse.ArgumentParser(description="Medication Reminder App")
-    parser.add_argument(
-        "--lang",
-        default="en",
-        help="Language code for the app (e.g., 'en', 'es', 'fr')",
-    )
-    args = parser.parse_args()
-
-    app = QApplication(sys.argv)
-    window = MedicationReminderApp(language=args.lang)
-    window.show()
-    sys.exit(app.exec())

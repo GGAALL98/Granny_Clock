@@ -1,11 +1,16 @@
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QComboBox, QListWidget, QListWidgetItem, QGridLayout, QGroupBox, QWidget
+from PyQt6.QtWidgets import (
+    QDialog, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit,
+    QComboBox, QListWidget, QListWidgetItem, QGridLayout, QGroupBox, QWidget,
+    QScrollArea
+)
 from PyQt6.QtGui import QFont
+from PyQt6.QtCore import Qt
 import json
 import os
 from datetime import datetime
 
 TRANSLATIONS_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "resources/translations_editor.json"
+    os.path.dirname(os.path.abspath(__file__)), "resources/translations/editor.json"
 )
 
 # Load translations from JSON file
@@ -36,10 +41,8 @@ class MedicationManager(QDialog):
         # Left group for Keyboard section
         keyboard_group = QGroupBox(self.translate("Keyboard"), self)
         keyboard_layout = QVBoxLayout()
-
-        # Create keyboard layout
+        # Create scrollable keyboard layout
         self.create_keyboard(keyboard_layout)
-
         keyboard_group.setLayout(keyboard_layout)
 
         # Right group for App section (Medication Management)
@@ -52,11 +55,18 @@ class MedicationManager(QDialog):
         self.refresh_medication_list()  # Initially populate the list
         app_layout.addWidget(self.med_list_widget)
 
-        # Medication Name
+        # Medication Name input and Clear button in a horizontal layout
+        name_input_layout = QHBoxLayout()
         self.name_input = QLineEdit(self)
         self.name_input.setPlaceholderText(self.translate("Medication Name"))
         self.name_input.setFont(QFont("Arial", 12))
-        app_layout.addWidget(self.name_input)
+        name_input_layout.addWidget(self.name_input)
+
+        self.clear_button = QPushButton(self.translate("Clear"), self)
+        self.clear_button.clicked.connect(lambda: self.name_input.clear())
+        name_input_layout.addWidget(self.clear_button)
+
+        app_layout.addLayout(name_input_layout)
 
         # Controls: Hour, Minute, Day, and Buttons
         control_layout = QVBoxLayout()
@@ -127,37 +137,47 @@ class MedicationManager(QDialog):
 
     def create_keyboard(self, parent_layout):
         """
-        Create and display a keyboard with numbers followed by letters.
+        Create and display a keyboard with keys arranged in 4 columns inside a scrollable area.
         """
-        keyboard_layout = QVBoxLayout()
+        # Create a QScrollArea, set it to be resizable, and disable horizontal scrolling
+        scroll_area = QScrollArea(self)
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        # Letters section
-        letter_layout = QGridLayout()
-        letters = self.load_keyboard_layout("letters")  # Load letters from JSON
-        for row_idx, row in enumerate(letters):
-            for col_idx, letter in enumerate(row):
-                button = QPushButton(letter, self)
-                button.clicked.connect(lambda _, letter=letter: self.add_to_name(letter))
-                button.setFixedSize(80, 80)  # Increase button size
-                letter_layout.addWidget(button, row_idx, col_idx)
-        keyboard_layout.addLayout(letter_layout)
+        # Create a container widget and assign it a layout
+        scroll_widget = QWidget()
+        keyboard_layout = QVBoxLayout(scroll_widget)
 
-        parent_layout.addLayout(keyboard_layout)
+        # Use a grid layout for the keys with 4 columns
+        grid_layout = QGridLayout()
+        # Get the flat list of keys
+        keys = self.load_keyboard_layout("letters")
+
+        # Create buttons and add them to the grid layout
+        for index, key in enumerate(keys):
+            row = index // 4
+            col = index % 4
+            button = QPushButton(key, self)
+            # Capture the key in the lambda to avoid late-binding issues
+            button.clicked.connect(lambda _, key=key: self.add_to_name(key))
+            button.setFixedSize(80, 80)  # Set button size
+            grid_layout.addWidget(button, row, col)
+
+        keyboard_layout.addLayout(grid_layout)
+        scroll_area.setWidget(scroll_widget)
+        parent_layout.addWidget(scroll_area)
 
     def load_keyboard_layout(self, type_of_layout):
         """
-        Load the keyboard layout from JSON file.
-        Returns a list of rows (list of strings).
+        Load the keyboard layout from a hardcoded flat list.
+        Returns a flat list of keys.
         """
         layout = {
             "letters": [
-                ["a", "b", "c", "d", "e"],
-                ["f", "g", "h", "i", "j"],
-                ["k", "l", "m", "n", "o"],
-                ["p", "q", "r", "s", "t"],
-                ["u", "v", "w", "x", "y"],
-                ["z", "1", "2", "3", "4"],
-                ["5", "6", "7", "8", "9"] 
+                "a", "b", "c", "d", "e", "f", "g", "h", "i", "j",
+                "k", "l", "m", "n", "o", "p", "q", "r", "s", "t",
+                "u", "v", "w", "x", "y", "z", "1", "2", "3", "4",
+                "5", "6", "7", "8", "9"
             ]
         }
         return layout.get(type_of_layout, [])
@@ -204,33 +224,34 @@ class MedicationManager(QDialog):
             self.med_list_widget.addItem(item)
 
     def add_medication(self):
-                """
-                Add a new medication to the list or merge days if the medication already exists.
-                """
-                name = self.name_input.text().strip()
-                hour = self.hour_input.currentText().strip()
-                minute = self.minute_input.currentText().strip()
-                time = f"{hour}:{minute}"
-                day = self.reverse_translate(self.days_input.currentText())  # Translate day to original language
-            
-                if name and time:
-                    # Check if the medication already exists (same name and time)
-                    existing_medication = next((med for med in self.medications if med['name'] == name and med['time'] == time), None)
-            
-                    if existing_medication:
-                        # Medication already exists, merge the days
-                        if day not in existing_medication['days']:
-                            existing_medication['days'].append(day)
-                    else:
-                        # New medication, no merge needed, just add
-                        self.medications.append({"name": name, "time": time, "days": [day]})
-            
-                    # Save medications and update UI
-                    self.save_medications()  # Save after adding/merging
-                    self.parent.update_time()  # Ask parent to update UI with new medication list
-                    self.refresh_medication_list()  # Refresh the list
-            
-                    self.name_input.clear()  # Clear the input field after adding/merging
+        """
+        Add a new medication to the list or merge days if the medication already exists.
+        """
+        name = self.name_input.text().strip()
+        hour = self.hour_input.currentText().strip()
+        minute = self.minute_input.currentText().strip()
+        time = f"{hour}:{minute}"
+        day = self.reverse_translate(self.days_input.currentText())  # Translate day to original language
+
+        if name and time:
+            # Check if the medication already exists (same name and time)
+            existing_medication = next((med for med in self.medications 
+                                        if med['name'] == name and med['time'] == time), None)
+
+            if existing_medication:
+                # Medication already exists, merge the days
+                if day not in existing_medication['days']:
+                    existing_medication['days'].append(day)
+            else:
+                # New medication, add it
+                self.medications.append({"name": name, "time": time, "days": [day]})
+
+            # Save medications and update UI
+            self.save_medications()  # Save after adding/merging
+            self.parent.update_time()  # Ask parent to update UI with new medication list
+            self.refresh_medication_list()  # Refresh the list
+
+            self.name_input.clear()  # Clear the input field after adding/merging
 
     def remove_medication(self):
         """
@@ -244,8 +265,7 @@ class MedicationManager(QDialog):
                 item_text.split(" - ")[1].split(" ")[0],
             )
             self.medications = [
-                med
-                for med in self.medications
+                med for med in self.medications
                 if not (med["name"] == name and med["time"] == time)
             ]
             self.save_medications()  # Save after removal
@@ -270,19 +290,18 @@ class MedicationManager(QDialog):
         """
         with open(self.medication_file, "w") as file:
             json.dump({"medications": self.medications}, file, indent=4)
-    
+
         self.parent.medications = self.parent.load_medications()
         self.parent.update_time()
 
     def translate(self, text):
-            """Translate the text using the selected language."""
-            return self.translations.get(self.language, {}).get(text, text)
-            
+        """Translate the text using the selected language."""
+        return self.translations.get(self.language, {}).get(text, text)
+
     def reverse_translate(self, translated_text):
         """Reverse translate the text to the original language."""
         # Search for the translated_text in all language dictionaries
         for lang, translations in self.translations.items():
-            # Check if the translated text is in the dictionary for the current language
             for key, value in translations.items():
                 if value == translated_text:
                     return key  # Return the original text (key)
